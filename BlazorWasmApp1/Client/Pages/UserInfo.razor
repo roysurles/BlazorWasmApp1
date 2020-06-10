@@ -1,0 +1,70 @@
+﻿@page "/UserInfo"
+@attribute [Authorize]
+@*@attribute [Authorize(Roles = "Admin, superuser")]*@
+
+<h3>UserInfo</h3>
+
+@if (User == null)
+{
+    <div class="text-danger">
+        User is null
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <label for="User.Identity.AuthenticationType">User.Identity.AuthenticationType</label>
+        <input id="User.Identity.AuthenticationType" name="User.Identity.AuthenticationType" class="form-control" value="@(User.Identity?.AuthenticationType)" />
+    </div>
+    <div class="form-group">
+        <label for="User.Identity.IsAuthenticated">User.Identity.IsAuthenticated</label>
+        <input id="User.Identity.IsAuthenticated" name="User.Identity.IsAuthenticated" class="form-control" value="@(User.Identity?.IsAuthenticated.ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="User.Identity.Name">User.Identity.Name</label>
+        <input id="User.Identity.Name" name="User.Identity.Name" class="form-control" value="@(User.Identity?.Name)" />
+    </div>
+    <div class="form-group">
+        <label for="User.IsInRole.Admin">User.IsInRole.Admin</label>
+        <input id="User.IsInRole.Admin" name="User.IsInRole.Admin" class="form-control" value="@(User.IsInRole("Admin").ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="User.IsInRole.User">User.IsInRole.User</label>
+        <input id="User.IsInRole.User" name="User.IsInRole.User" class="form-control" value="@(User.IsInRole("User").ToString())" />
+    </div>
+    <div class="form-group">
+        <label for="User.Identity.Name">User.Claims.Count</label>
+        <input id="User.Claims.Count" name="User.Claims.Count" class="form-control" value="@(User.Claims.Count())" />
+    </div>
+    @if (User.Claims.Any())
+    {
+        <ul>
+            @foreach (var claim in User.Claims)
+            {
+                <li>@claim.Type: @claim.Value</li>
+            }
+        </ul>
+    }
+}
+
+@code {
+
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    protected ClaimsPrincipal User { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            User = authState.User;
+        }
+        catch (Exception ex)
+        {
+            var mesage = ex.Message;
+            //throw;
+        }
+    }
+}

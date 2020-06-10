@@ -1,0 +1,35 @@
+@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavigationManager
+
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn>
+        custom LoggingIn message from /authentication/@Action
+    </LoggingIn>
+    <LogInFailed>
+        custom LogInFailed message from /authentication/@Action
+    </LogInFailed>
+    <LogOut>
+        custom LogOut message from /authentication/@Action
+    </LogOut>
+    <LogOutFailed>
+        custom LogOutFailed message from /authentication/@Action
+    </LogOutFailed>
+    <LogOutSucceeded>
+        custom LogOutSucceeded message from /authentication/@Action
+        @*@{ NavigationManager.NavigateTo("/") };*@
+    </LogOutSucceeded>
+</RemoteAuthenticatorView>
+
+
+<h3>@Action</h3>
+
+
+@code{
+    [Parameter] public string Action { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

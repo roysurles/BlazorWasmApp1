@@ -1,0 +1,84 @@
+﻿@page "/AccessTokenInfo"
+
+@inject IAccessTokenProvider AccessTokenProvider
+
+<h3>AccessTokenInfo</h3>
+
+<AuthorizeView>
+    <Authorizing>
+        custom Authorizing message for AccessTokenProvider
+    </Authorizing>
+    <Authorized>
+        @if (AccessTokenResult == null)
+        {
+            <div class="text-danger">
+                AccessTokenResult is null
+            </div>
+        }
+        @if (AccessTokenData == null)
+        {
+            <div class="text-danger">
+                AccessTokenData is null
+            </div>
+        }
+        @if (AccessTokenResult != null)
+        {
+            <div class="form-group">
+                <label for="AccessTokenResult.Status">AccessTokenResult?.Status</label>
+                <input id="AccessTokenResult.Status" name="AccessTokenResult.Status" class="form-control" value="@AccessTokenResult?.Status" />
+            </div>
+            <div class="form-group">
+                <label for="AccessTokenResult.RedirectUrl">AccessTokenResult?.RedirectUrl</label>
+                <input id="AccessTokenResult.RedirectUrl" name="AccessTokenResult.RedirectUrl" class="form-control" value="@AccessTokenResult?.RedirectUrl" />
+            </div>
+            <div>
+                <hr />
+            </div>
+        }
+        @if (AccessTokenData != null)
+        {
+            <div class="form-group">
+                <label for="AccessTokenData.Expires">AccessTokenData?.Expires</label>
+                <input id="AccessTokenData.Expires" name="AccessTokenData.Expires" class="form-control" value="@AccessTokenData?.Expires" />
+            </div>
+            <div class="form-group">
+                <label for="AccessTokenData.GrantedScopes">AccessTokenData?.GrantedScopes</label>
+                <input id="AccessTokenData.GrantedScopes" name="AccessTokenData.GrantedScopes" class="form-control" value="@(string.Join(',', AccessTokenData?.GrantedScopes))" />
+            </div>
+            <div class="form-group">
+                <label for="AccessTokenData.Value">AccessTokenData?.Value</label>
+                <input id="AccessTokenData.Value" name="AccessTokenData.Value" class="form-control" value="@AccessTokenData?.Value" />
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        Cannot view access token info because you are not authorized...
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    protected AccessTokenResult AccessTokenResult { get; set; }
+    protected Microsoft.AspNetCore.Components.WebAssembly.Authentication.AccessToken AccessTokenData { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //await base.OnInitializedAsync();
+            AccessTokenResult = await AccessTokenProvider.RequestAccessToken();
+            AccessTokenResult.TryGetToken(out AccessToken accessTokenData);
+            AccessTokenData = accessTokenData;
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+}
+
