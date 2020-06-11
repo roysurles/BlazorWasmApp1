@@ -1,0 +1,73 @@
+@page "/fetchdata2"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using BlazorWasmApp1.Shared
+@*@attribute [Authorize(Policy = "SuperUser")]*@
+@*@attribute [Authorize(Roles = "Admin")]*@
+@attribute [Authorize]
+@inject IHttpClientFactory HttpClientFactory
+@inject IAccessTokenProvider AccessTokenProvider
+@inject IJSRuntime JSRuntime
+
+
+    <h1>Weather forecast 2 - https://localhost:44390/weatherforecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+
+    <p>@HttpClient.BaseAddress</p>
+}
+
+@code {
+    private WeatherForecast[] forecasts;
+
+    protected HttpClient HttpClient { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.CoreAPI");
+            //HttpClient.BaseAddress = new Uri("https://localhost:44390/");
+            forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"*** FetchData.razor encountered exception:  {ex.Message}");
+            var message = ex.Message;
+        }
+    }
+
+}

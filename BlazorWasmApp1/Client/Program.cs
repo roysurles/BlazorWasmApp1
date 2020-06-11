@@ -21,9 +21,13 @@ namespace BlazorWasmApp1.Client
 
             builder.Services.AddHttpClient("BlazorWasmApp1.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BlazorWasmApp1.ServerAPI"));
+
+            builder.Services.AddHttpClient("BlazorWasmApp1.CoreAPI", client => client.BaseAddress = new Uri("https://localhost:44390/"))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+            builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BlazorWasmApp1.CoreAPI"));
+
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<HttpContextAccessor>();
