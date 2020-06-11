@@ -28,6 +28,15 @@ namespace BlazorWasmApp1.Client
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<HttpContextAccessor>();
 
+            // example of policy:  https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-3.1
+            builder.Services.AddAuthorizationCore(options =>
+            {
+                options.AddPolicy("SuperUser", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Value.Equals("Admin")
+                    && context.User.HasClaim(c => c.Value.Equals("User"))
+                    )));
+            });
+
             builder.Services.AddApiAuthorization()
                 .AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 

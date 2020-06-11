@@ -2,8 +2,9 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using BlazorWasmApp1.Shared
-@attribute [Authorize(Roles = "Admin")]
-@*@attribute [Authorize]*@
+@*@attribute [Authorize(Policy = "SuperUser")]*@
+@*@attribute [Authorize(Roles = "Admin")]*@
+@attribute [Authorize]
 @inject HttpClient Http
 @inject IAccessTokenProvider AccessTokenProvider
 @inject IJSRuntime JSRuntime
