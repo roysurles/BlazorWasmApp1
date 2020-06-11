@@ -1,6 +1,7 @@
 ﻿@page "/UserInfo"
 @attribute [Authorize]
 @*@attribute [Authorize(Roles = "Admin, superuser")]*@
+@inject Microsoft.AspNetCore.Http.HttpContextAccessor HttpContextAccessor
 
 <h3>UserInfo</h3>
 
@@ -33,6 +34,10 @@ else
         <input id="User.IsInRole.User" name="User.IsInRole.User" class="form-control" value="@(User.IsInRole("User").ToString())" />
     </div>
     <div class="form-group">
+        <label for="TraceIdentifier">TraceIdentifier</label>
+        <input id="TraceIdentifier" name="TraceIdentifier" class="form-control" value="@TraceIdentifier" />
+    </div>
+    <div class="form-group">
         <label for="User.Identity.Name">User.Claims.Count</label>
         <input id="User.Claims.Count" name="User.Claims.Count" class="form-control" value="@(User.Claims.Count())" />
     </div>
@@ -54,12 +59,22 @@ else
 
     protected ClaimsPrincipal User { get; set; }
 
+    protected string TraceIdentifier { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var authState = await AuthenticationStateTask;
             User = authState.User;
+
+            var httpContext = HttpContextAccessor.HttpContext;
+
+            TraceIdentifier = httpContext == null
+                ? "httpContext is null"
+                : string.IsNullOrWhiteSpace(httpContext.TraceIdentifier)
+                    ? "httpContext.TraceIdentifier IsNullOrWhiteSpace"
+                    : httpContext.TraceIdentifier;
         }
         catch (Exception ex)
         {

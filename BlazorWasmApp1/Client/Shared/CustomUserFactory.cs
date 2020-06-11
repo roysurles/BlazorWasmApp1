@@ -9,18 +9,22 @@ using BlazorWasmApp1.Shared.Models;
 
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace BlazorWasmApp1.Client.Shared
 {
     public class CustomUserFactory : AccountClaimsPrincipalFactory<RemoteUserAccount>
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly HttpContextAccessor _httpContextAccessor;
 
-        public CustomUserFactory(IAccessTokenProviderAccessor accessor, IHttpClientFactory clientFactory) : base(accessor)
+        public CustomUserFactory(IAccessTokenProviderAccessor accessor, IHttpClientFactory clientFactory, HttpContextAccessor httpContextAccessor) : base(accessor)
         {
             _clientFactory = clientFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Wrong Usage", "DF0010:Marks undisposed local variables.", Justification = "<Pending>")]
         public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
         {
             var user = await base.CreateUserAsync(account, options);
@@ -54,6 +58,10 @@ namespace BlazorWasmApp1.Client.Shared
                         }
                     }
                 }
+
+                if (_httpContextAccessor.HttpContext?.TraceIdentifier != null)
+                    identity.AddClaim(new Claim("TraceIdentifier", _httpContextAccessor.HttpContext.TraceIdentifier));
+                //identity.AddClaim(new Claim("Session.Id", _httpContextAccessor.HttpContext.Session.Id));
 
                 identity.AddClaim(new Claim("MyCustomClaim", "MyCustomClaim.Value"));
 
