@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BlazorWasmApp1.Shared
+namespace BlazorWasmApp1.Shared.Models
 {
     public class WeatherForecast
     {

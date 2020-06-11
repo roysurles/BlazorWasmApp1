@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using BlazorWasmApp1.Shared;
+using BlazorWasmApp1.Shared.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,5 +43,12 @@ namespace BlazorWasmApp1.Server.Controllers
             })
             .ToArray();
         }
+
+        //[AllowAnonymous]
+        //[HttpPost]
+        //[Route("")]
+        //public async Task<ActionResult<IApiResultModel<PostAccountResponseModel>>> PostAccountAsync([FromBody] PostAccountRequestModel postAccountRequestModel) =>
+        //    CreateActionResult(await _accountService.PostAccountAsync(User, postAccountRequestModel).ConfigureAwait(false), false);
+
     }
 }
