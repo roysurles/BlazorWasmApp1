@@ -13,10 +13,11 @@ namespace BlazorWasmApp1.Shared.Models.Common.OrderBy
         /// </summary>
         [JsonProperty("item")]
         public T Item { get; set; }
+
         /// <summary>
         /// SortOrder Enumeration
         /// </summary>
-        [JsonProperty("sortOrder")]
-        public SortOrder SortOrder { get; set; }
+        [JsonProperty("sortOrderType")]
+        public SortOrderType SortOrderType { get; set; }
     }
 }
