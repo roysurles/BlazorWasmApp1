@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
+using BlazorWasmApp1.Server.Core.Extensions;
 using BlazorWasmApp1.Server.Data;
 using BlazorWasmApp1.Server.Models;
 
@@ -52,6 +53,8 @@ namespace BlazorWasmApp1.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddServicesEx(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
