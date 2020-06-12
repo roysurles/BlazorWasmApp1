@@ -5,7 +5,7 @@
 @*@attribute [Authorize(Policy = "SuperUser")]*@
 @*@attribute [Authorize(Roles = "Admin")]*@
 @attribute [Authorize]
-@inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
 @inject IAccessTokenProvider AccessTokenProvider
 @inject IJSRuntime JSRuntime
 
@@ -41,16 +41,20 @@ else
             }
         </tbody>
     </table>
-}
+    <br />
+    <p>@HttpClient.BaseAddress</p>}
 
 @code {
     private WeatherForecast[] forecasts;
+
+    protected HttpClient HttpClient { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.ServerAPI");
+            forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
         }
         catch (AccessTokenNotAvailableException exception)
         {

@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using BlazorWasmApp1.Shared.Models;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace BlazorWasmApp1.Core.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
