@@ -28,17 +28,9 @@ namespace BlazorWasmApp1.Core.Api
 
             services.AddAuthentication(options =>
                 {
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-               .AddCookie(options =>
-               {
-                   options.ClaimsIssuer = "BlazorWasmApp1.Client";
-                   options.LoginPath = "https://localhost:44350/authentication/login";
-                   options.LogoutPath = "https://localhost:44350/authentication/logout";
-                   //options.AccessDeniedPath = "/Account/Forbidden/";
-               })
                .AddJwtBearer(options =>
                {
                    options.Audience = "https://localhost:44390/";
