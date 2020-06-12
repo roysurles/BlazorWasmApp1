@@ -33,9 +33,9 @@ namespace BlazorWasmApp1.Core.Api
                 })
                .AddJwtBearer(options =>
                {
-                   options.Audience = "https://localhost:44390/";
+                   options.Audience = "MyExternalApi";
                    options.Authority = "https://localhost:44350/";
-                   options.ClaimsIssuer = "BlazorWasmApp1.Client";
+                   //options.ClaimsIssuer = "BlazorWasmApp1.Client";
                });
 
             services.AddControllers();
