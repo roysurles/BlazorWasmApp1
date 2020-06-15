@@ -34,6 +34,9 @@ namespace BlazorWasmApp1.Core.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // https://docs.microsoft.com/en-us/aspnet/core/performance/response-compression?view=aspnetcore-3.1
+            services.AddResponseCompression();
+
             // https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1
             services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
@@ -159,6 +162,8 @@ namespace BlazorWasmApp1.Core.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseResponseCompression();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
