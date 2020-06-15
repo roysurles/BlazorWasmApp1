@@ -8,9 +8,10 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject IAccessTokenProvider AccessTokenProvider
 @inject IJSRuntime JSRuntime
+@inject ILogger<FetchData2> Logger
 
 
-    <h1>Weather forecast 2 - https://localhost:44390/weatherforecast</h1>
+<h1>Weather forecast 2 - https://localhost:44390/weatherforecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
@@ -44,20 +45,64 @@ else
     <br />
 
     <p>@HttpClient.BaseAddress</p>
+
+
+    <br />
+    <h4>Messages</h4>
+    <ul>
+        @foreach (var message in ApiResultModel.Messages)
+        {
+            <li><span><bold>@message.MessageType</bold>: @message?.Message</span></li>
+        }
+    </ul>
+
+    <h4>Json</h4>
+    <span>@Json</span>
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private IEnumerable<WeatherForecast> forecasts;
+    //private WeatherForecast[] forecasts;
 
     protected HttpClient HttpClient { get; set; }
+
+    protected ApiResultModel<IEnumerable<WeatherForecast>> ApiResultModel { get; set; }
+
+    protected string Json { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            Logger.LogInformation("HttpClientFactory.CreateClient(\"BlazorWasmApp1.CoreAPI\")");
             HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.CoreAPI");
             //HttpClient.BaseAddress = new Uri("https://localhost:44390/");
-            forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            //forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            //Logger.LogInformation("var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>(\"WeatherForecast\");");
+            //var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>("WeatherForecast");
+
+
+            Logger.LogInformation("var response = await HttpClient.GetAsync(\"WeatherForecast\");");
+            using (var response = await HttpClient.GetAsync("WeatherForecast"))
+            {
+                Logger.LogInformation($"response.IsSuccessStatusCode:{response.IsSuccessStatusCode}");
+                if (response.IsSuccessStatusCode)
+                {
+                    Logger.LogInformation("await response.Content.ReadAsStringAsync();");
+                    Json = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation("ApiResultModel = Json.Deserialize<ApiResultModel<IEnumerable<WeatherForecast>>>();");
+                    ApiResultModel = Json.Deserialize<ApiResultModel<IEnumerable<WeatherForecast>>>();
+                    Logger.LogInformation($"ApiResultModel is {(ApiResultModel is null ? "NULL" : "DATA")}");
+                    Logger.LogInformation($"ApiResultModel.Messages.Count {(ApiResultModel.Messages?.Count() ?? 0)}");
+                    Logger.LogInformation($"ApiResultModel.Messages[0].Message {(ApiResultModel.Messages[0].Message)}");
+                    Logger.LogInformation($"ApiResultModel.Messages[0].MessageType {(ApiResultModel.Messages[0].MessageType)}");
+                    //Logger.LogInformation($"ApiResultModel.Messages[1].Message {(ApiResultModel.Messages[0].UnhandledException.Message)}");
+                    Logger.LogInformation($"ApiResultModel.Messages[1].MessageType {(ApiResultModel.Messages[0].MessageType)}");
+                    forecasts = ApiResultModel.Data;
+                    Logger.LogInformation($"forecasts.Count: {forecasts.Count()}");
+                }
+            }
+
         }
         catch (AccessTokenNotAvailableException exception)
         {

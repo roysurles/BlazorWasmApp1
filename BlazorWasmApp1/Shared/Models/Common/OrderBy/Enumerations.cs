@@ -1,10 +1,14 @@
 ﻿namespace BlazorWasmApp1.Shared.Models.Common.OrderBy
 {
     /// <summary>
-    /// SortOrder
+    /// SortOrderEnum
     /// </summary>
-    public enum SortOrder
+    public enum SortOrderEnum
     {
+        /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
         /// <summary>
         /// Ascending
         /// </summary>

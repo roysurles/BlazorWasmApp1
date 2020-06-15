@@ -8,6 +8,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.Pagination
     /// <summary>
     /// Represents the parameters required for pagination.
     /// </summary>
+    [Serializable]
     public class PaginationRequestModel : IPaginationRequestModel
     {
         /// <summary>

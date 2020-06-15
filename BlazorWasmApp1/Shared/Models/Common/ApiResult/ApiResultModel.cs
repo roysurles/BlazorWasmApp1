@@ -17,6 +17,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
     /// Represents a generic and consistent result model.
     /// </summary>
     /// <typeparam name="T">Type of data.</typeparam>
+    [Serializable]
     public class ApiResultModel<T> : IApiResultModel<T>
     {
         /// <summary>
@@ -50,19 +51,28 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// Flag indicating errors exist.
         /// </summary>
         [JsonProperty("hasErrors")]
-        public bool HasErrors => Messages.Any(x => x.MessageType == ApiResultMessageType.Error || x.MessageType == ApiResultMessageType.UnhandledException);
+        public bool HasErrors => Messages.Any(x => x.MessageType.Equals(ApiResultMessageTypeEnum.Error));
+
+        /// <summary>
+        /// Flag indicating unhandledExceptions exist.
+        /// </summary>
+        [JsonProperty("hasUnhandledExceptions")]
+        public bool HasUnhandledExceptions => Messages.Any(x => x.MessageType.Equals(ApiResultMessageTypeEnum.UnhandledException));
 
         /// <summary>
         /// Flag indicating warnings exist.
         /// </summary>
         [JsonProperty("hasWarnings")]
-        public bool HasWarnings => Messages.Any(x => x.MessageType == ApiResultMessageType.Warning);
+        public bool HasWarnings => Messages.Any(x => x.MessageType.Equals(ApiResultMessageTypeEnum.Warning));
 
         /// <summary>
         /// List of messages.
         /// </summary>ummary>
         [JsonProperty("messages")]
-        public List<IApiResultMessageModel> Messages { get; } = new List<IApiResultMessageModel>();
+        public List<ApiResultMessageModel> Messages { get; set; } = new List<ApiResultMessageModel>();
+
+        public IEnumerable<ApiResultMessageModel> Errors =>
+            Messages.Where(x => x.MessageType.Equals(ApiResultMessageTypeEnum.Error));
 
         /// <summary>
         /// Fluent method to set the HttpStatusCode property.
@@ -158,13 +168,15 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="exception">Exception</param>
         /// <param name="code">HttpStatusCode</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        public IApiResultModel<T> AddMessage(Exception exception, HttpStatusCode? code = HttpStatusCode.InternalServerError)
+        public IApiResultModel<T> AddMessage(Exception exception, string message = null, string source = null, HttpStatusCode? code = HttpStatusCode.InternalServerError)
         {
             Messages.Add(new ApiResultMessageModel
             {
-                MessageType = ApiResultMessageType.UnhandledException,
+                MessageType = ApiResultMessageTypeEnum.UnhandledException,
+                Message = message,
+                Source = source,
                 Code = (int)code,
-                UnhandledException = exception
+                //TODO: UnhandledException = exception
             });
 
             return this;
@@ -177,13 +189,13 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="source">Source</param>
         /// <param name="code">Code</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        public IApiResultModel<T> AddMessage(ApiResultMessageType apiResultMessageType, string message, string source = null, int? code = null)
+        public IApiResultModel<T> AddMessage(ApiResultMessageTypeEnum apiResultMessageType, string message, string source = null, int? code = null)
         {
             Messages.Add(new ApiResultMessageModel { MessageType = apiResultMessageType, Message = message, Source = source, Code = code });
             return this;
         }
 
-        public IApiResultModel<T> AddMessage(ApiResultMessageType apiResultMessageType, string message, string source = null, HttpStatusCode? code = null)
+        public IApiResultModel<T> AddMessage(ApiResultMessageTypeEnum apiResultMessageType, string message, string source = null, HttpStatusCode? code = null)
         {
             Messages.Add(new ApiResultMessageModel { MessageType = apiResultMessageType, Message = message, Source = source, Code = (int)code });
             return this;
@@ -210,7 +222,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// </summary>
         /// <param name="errors">IEnumerable&lt;IApiResultErrorModel&gt;</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        public IApiResultModel<T> AddMessages(IEnumerable<IApiResultMessageModel> messages)
+        public IApiResultModel<T> AddMessages(IEnumerable<ApiResultMessageModel> messages)
         {
             Messages.AddRange(messages);
             return this;
@@ -228,12 +240,12 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
 
             var errors = modelStateDictionary.Select(item => new { item.Key, item.Value.Errors }).ToList();
             foreach (var apiResultErrorModel in errors.SelectMany(item => item.Errors.Select(error => error.Exception == null
-                ? new ApiResultMessageModel { MessageType = ApiResultMessageType.Error, Code = (int)HttpStatusCode.BadRequest, Source = item.Key, Message = error.ErrorMessage }
+                ? new ApiResultMessageModel { MessageType = ApiResultMessageTypeEnum.Error, Code = (int)HttpStatusCode.BadRequest, Source = item.Key, Message = error.ErrorMessage }
                 : new ApiResultMessageModel
                 {
-                    MessageType = ApiResultMessageType.UnhandledException,
+                    MessageType = ApiResultMessageTypeEnum.UnhandledException,
                     Code = (int)HttpStatusCode.InternalServerError,
-                    UnhandledException = error.Exception
+                    //TODO:  UnhandledException = error.Exception
                 })))
             {
                 Messages.Add(apiResultErrorModel);
@@ -242,11 +254,11 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
             return this;
         }
 
-        public IApiResultModel<T> VerifyDataHasCount(ApiResultMessageType apiResultMessageType, string message = "No data found."
+        public IApiResultModel<T> VerifyDataHasCount(ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found."
             , string source = "Data Count", HttpStatusCode? httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true) =>
             VerifyDataHasCount(Data as IEnumerable, apiResultMessageType, message, source, httpStatusCode, setHttpStatusCode);
 
-        public IApiResultModel<T> VerifyDataHasCount(IEnumerable data, ApiResultMessageType apiResultMessageType, string message = "No data found."
+        public IApiResultModel<T> VerifyDataHasCount(IEnumerable data, ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found."
             , string source = "Data Count", HttpStatusCode? httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true)
         {
             if (data?.Cast<object>().Any() == false)
@@ -269,7 +281,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="httpStatusCode">Message HttpStatusCode; default is NotFound.  Will also set the HttpStatusCode property if desired.</param>
         /// <param name="setHttpStatusCode">Set the HttpStatusCode property if desired.</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        public IApiResultModel<T> VerifyDataIsNotNull(ApiResultMessageType apiResultMessageType, string message = "No data found.",
+        public IApiResultModel<T> VerifyDataIsNotNull(ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found.",
             string source = "Data", HttpStatusCode httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true)
         {
             if (EqualityComparer<T>.Default.Equals(Data, default(T)))
@@ -327,6 +339,11 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         bool HasErrors { get; }
 
         /// <summary>
+        /// Flag indicating unhandledExceptions  exist.
+        /// </summary>
+        bool HasUnhandledExceptions { get; }
+
+        /// <summary>
         /// Flag indicating warnings exist.
         /// </summary>
         bool HasWarnings { get; }
@@ -334,7 +351,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <summary>
         /// List of messages.
         /// </summary>ummary>
-        List<IApiResultMessageModel> Messages { get; }
+        List<ApiResultMessageModel> Messages { get; set; }
 
         /// <summary>
         /// Fluent method to set the HttpStatusCode property.
@@ -393,7 +410,8 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="exception">Exception</param>
         /// <param name="code">HttpStatusCode</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        IApiResultModel<T> AddMessage(Exception exception, HttpStatusCode? code = HttpStatusCode.InternalServerError);
+        IApiResultModel<T> AddMessage(Exception exception, string message = null, string source = null, HttpStatusCode? code = HttpStatusCode.InternalServerError);
+
         /// <summary>
         /// Fluent method to add an error.
         /// </summary>
@@ -401,7 +419,8 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="source">Source</param>
         /// <param name="code">Code</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        IApiResultModel<T> AddMessage(ApiResultMessageType apiResultMessageType, string message, string source = null, int? code = null);
+        IApiResultModel<T> AddMessage(ApiResultMessageTypeEnum apiResultMessageType, string message, string source = null, int? code = null);
+
         /// <summary>
         /// Fluent method to add an error.
         /// </summary>
@@ -409,7 +428,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <param name="source">Source</param>
         /// <param name="code">HttpStatusCode</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        IApiResultModel<T> AddMessage(ApiResultMessageType apiResultMessageType, string message, string source = null, HttpStatusCode? code = null);
+        IApiResultModel<T> AddMessage(ApiResultMessageTypeEnum apiResultMessageType, string message, string source = null, HttpStatusCode? code = null);
 
         // Lets wait and see if this is necessary... leaving commented out for now
         // IApiResultModel<T> AddDefaultUnhandledExceptionError(Exception ex, string source = null);
@@ -419,7 +438,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// </summary>
         /// <param name="errors">IEnumerable&lt;IApiResultErrorModel&gt;</param>
         /// <returns>IApiResultModel&lt;T&gt;</returns>
-        IApiResultModel<T> AddMessages(IEnumerable<IApiResultMessageModel> messages);
+        IApiResultModel<T> AddMessages(IEnumerable<ApiResultMessageModel> messages);
         /// <summary>
         /// Fluent method to add any error(s) from ModelStateDictionary.
         /// </summary>
@@ -427,13 +446,13 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <returns>IApiResultModel&lt;T&gt;</returns>
         IApiResultModel<T> AddMessages(ModelStateDictionary modelStateDictionary);
 
-        IApiResultModel<T> VerifyDataHasCount(ApiResultMessageType apiResultMessageType, string message = "No data found."
+        IApiResultModel<T> VerifyDataHasCount(ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found."
             , string source = "Data Count", HttpStatusCode? httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true);
 
-        IApiResultModel<T> VerifyDataHasCount(IEnumerable data, ApiResultMessageType apiResultMessageType, string message = "No data found."
+        IApiResultModel<T> VerifyDataHasCount(IEnumerable data, ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found."
             , string source = "Data Count", HttpStatusCode? httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true);
 
-        IApiResultModel<T> VerifyDataIsNotNull(ApiResultMessageType apiResultMessageType, string message = "No data found.",
+        IApiResultModel<T> VerifyDataIsNotNull(ApiResultMessageTypeEnum apiResultMessageType, string message = "No data found.",
             string source = "Data", HttpStatusCode httpStatusCode = HttpStatusCode.NotFound, bool setHttpStatusCode = true);
 
         /// <summary>

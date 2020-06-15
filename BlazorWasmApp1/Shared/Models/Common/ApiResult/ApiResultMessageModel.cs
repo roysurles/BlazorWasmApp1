@@ -8,13 +8,14 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
     /// <summary>
     /// Represents a message about the current result.
     /// </summary>
+    [Serializable]
     public class ApiResultMessageModel : IApiResultMessageModel
     {
         /// <summary>
         /// Represents the severity or level of this message.
         /// </summary>
         [JsonProperty("messageType")]
-        public ApiResultMessageType MessageType { get; set; }
+        public ApiResultMessageTypeEnum MessageType { get; set; }
 
         /// <summary>
         /// Represents a code for this message; Usually will equate to a HttpStatusCode, but could be different.
@@ -34,11 +35,11 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         [JsonProperty("source")]
         public string Source { get; set; }
 
-        /// <summary>
-        /// UnhandledException
-        /// </summary>
-        [JsonProperty("unhandledException")]
-        public Exception UnhandledException { get; set; }
+        ///// <summary>
+        ///// UnhandledException
+        ///// </summary>
+        //[JsonProperty("unhandledException")]
+        //public Exception UnhandledException { get; set; }
 
         // TODO
         //public bool ShouldSerializeUnhandledException() =>
@@ -53,7 +54,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// <summary>
         /// Represents the severity or level of this message.
         /// </summary>
-        ApiResultMessageType MessageType { get; set; }
+        ApiResultMessageTypeEnum MessageType { get; set; }
 
         /// <summary>
         /// Represents a code for this message; Usually will equate to a HttpStatusCode, but could be different.
@@ -70,10 +71,10 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// </summary>
         string Source { get; set; }
 
-        /// <summary>
-        /// UnhandledException
-        /// </summary>
-        Exception UnhandledException { get; set; }
+        ///// <summary>
+        ///// UnhandledException
+        ///// </summary>
+        //Exception UnhandledException { get; set; }
 
         //bool ShouldSerializeUnhandledException();
     }

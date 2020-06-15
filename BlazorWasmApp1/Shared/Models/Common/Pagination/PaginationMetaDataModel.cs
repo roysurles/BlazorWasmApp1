@@ -11,6 +11,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.Pagination
     /// <summary>
     /// Represent the resulting meta data properties of the corresponding pagination request.
     /// </summary>
+    [Serializable]
     public class PaginationMetaDataModel : IPaginationMetaDataModel
     {
         /// <summary>

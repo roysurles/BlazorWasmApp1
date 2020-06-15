@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 
 namespace BlazorWasmApp1.Shared.Models.Common.OrderBy
 {
@@ -6,6 +8,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.OrderBy
     /// Represents a generic item to sort by.
     /// </summary>
     /// <typeparam name="T">Desired Type</typeparam>
+    [Serializable]
     public class OrderByRequestModel<T>
     {
         /// <summary>
@@ -18,6 +21,6 @@ namespace BlazorWasmApp1.Shared.Models.Common.OrderBy
         /// SortOrder Enumeration
         /// </summary>
         [JsonProperty("sortOrderType")]
-        public SortOrderType SortOrderType { get; set; }
+        public SortOrderEnum SortOrder { get; set; }
     }
 }

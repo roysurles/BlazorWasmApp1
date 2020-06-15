@@ -1,3 +1,6 @@
+
+using BlazorWasmApp1.Shared.Extensions;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +41,8 @@ namespace BlazorWasmApp1.Core.Api
                    //options.ClaimsIssuer = "BlazorWasmApp1.Client";
                });
 
+            services.AddServicesEx(Configuration);
+
             services.AddControllers();
         }
 
@@ -48,6 +53,8 @@ namespace BlazorWasmApp1.Core.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //app.UseExceptionHandlerEx(env);
 
             app.UseHttpsRedirection();
 
