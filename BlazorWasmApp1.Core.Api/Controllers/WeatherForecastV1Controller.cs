@@ -9,14 +9,13 @@ using BlazorWasmApp1.Shared.Extensions;
 using BlazorWasmApp1.Shared.Models;
 using BlazorWasmApp1.Shared.Models.Common.ApiResult;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace BlazorWasmApp1.Core.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     //[AllowAnonymous]
     [ApiVersion("1")]
     [ControllerName("WeatherForecast")]

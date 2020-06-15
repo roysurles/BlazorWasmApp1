@@ -64,7 +64,7 @@ namespace BlazorWasmApp1.Core.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseExceptionHandlerEx(env);
+            app.UseExceptionHandlerEx(env);
 
             app.UseHttpsRedirection();
 
