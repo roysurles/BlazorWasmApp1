@@ -1,4 +1,6 @@
-﻿using BlazorWasmApp1.Shared.Models.Common.ApiResult;
+﻿using BlazorWasmApp1.Shared.Constants;
+using BlazorWasmApp1.Shared.Models.Common.ApiResult;
+using BlazorWasmApp1.Shared.Models.Settings;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +23,9 @@ namespace BlazorWasmApp1.Shared.Extensions
         {
             // Strong typed models for appSettings.json
             services.AddOptions();
+            // https://stackoverflow.com/questions/38515965/cannot-set-configuration-from-json-appsettings-file-in-net-core-project
             //services.Configure<JwtSettingsModel>(configuration.GetSection(AppSettingSectionNames.JwtSettings));
-            //services.Configure<CorrelationIdSettingsModel>(configuration.GetSection(AppSettingSectionNames.CorrelationIdSettings));
+            services.Configure<CorrelationIdSettingsModel>(configuration.GetSection(AppSettingSectionNameConstants.CorrelationIdSettings));
             //services.Configure<SendGridSettingsModel>(configuration.GetSection(AppSettingSectionNames.SendGridSettings));
 
             // Framework objects

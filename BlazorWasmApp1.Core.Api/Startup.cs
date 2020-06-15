@@ -176,6 +176,7 @@ namespace BlazorWasmApp1.Core.Api
             app.UseExceptionHandlerEx(env);
 
             app.UseHttpsRedirection();
+            app.UseCorrelationId();
 
             app.UseRouting();
 
