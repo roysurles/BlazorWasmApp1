@@ -17,13 +17,11 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
     /// Represents a generic and consistent result model.
     /// </summary>
     /// <typeparam name="T">Type of data.</typeparam>
-    [Serializable]
     public class ApiResultModel<T> : IApiResultModel<T>
     {
         /// <summary>
         /// HttpStatusCode
         /// </summary>
-        [JsonIgnore]
         [JsonProperty("httpStatusCode")]
         public HttpStatusCode HttpStatusCode { get; set; } = HttpStatusCode.OK;
 

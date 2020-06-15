@@ -100,11 +100,13 @@ namespace BlazorWasmApp1.Shared.Models.Common.Pagination
         /// Url for the next page if there is a next page.
         /// </summary>
         [JsonProperty("nextPageUrl")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2235:Mark all non-serializable fields", Justification = "<Pending>")]
         public string NextPageUrl { get; set; }
         /// <summary>
         /// Url for the previous page if there is a next page.
         /// </summary>
         [JsonProperty("previousPageUrl")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2235:Mark all non-serializable fields", Justification = "<Pending>")]
         public string PreviousPageUrl { get; set; }
 
         /// <summary>

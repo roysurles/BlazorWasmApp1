@@ -1,5 +1,4 @@
-﻿
-using BlazorWasmApp1.Shared.Models.Common.ApiResult;
+﻿using BlazorWasmApp1.Shared.Models.Common.ApiResult;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,10 +43,10 @@ namespace BlazorWasmApp1.Shared.Extensions
 
             // Add framework services.
             //services.AddCors();
-            //services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
             //services.AddApiVersioning();
-            //services.AddMvc(config => config.Filters.Add(typeof(GlobalModelStateValidationFilter)))
-            //    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+            //services.AddMvcCore(config => config.Filters.Add(typeof(GlobalModelStateValidationFilter)))
+            //    .SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
     }
 }

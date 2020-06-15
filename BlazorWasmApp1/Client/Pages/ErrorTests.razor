@@ -1,0 +1,61 @@
+﻿@page "/ErrorTests"
+@inject IHttpClientFactory HttpClientFactory
+@inject IAccessTokenProvider AccessTokenProvider
+@inject IJSRuntime JSRuntime
+@inject ILogger<ErrorTests> Logger
+
+
+<h3>ErrorTests</h3>
+<span><bold>StatusCode:</bold> @HttpStatusCode.ToString()</span>
+<br />
+@if (ApiResultModel != null)
+{
+    <span><bold>ApiResultModel.HttpStatusCode:</bold> @ApiResultModel.HttpStatusCode.ToString()</span>
+    <br />
+}
+<span><bold>Json:</bold> @Json</span>
+
+@code {
+
+    protected HttpClient HttpClient { get; set; }
+    protected ApiResultModel<BadModelStateRequestModel> ApiResultModel { get; set; }
+    protected string Json { get; set; } = string.Empty;
+    protected System.Net.HttpStatusCode HttpStatusCode { get; set; } = System.Net.HttpStatusCode.OK;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Logger.LogInformation("HttpClientFactory.CreateClient(\"BlazorWasmApp1.CoreAPI\")");
+            HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.CoreAPI");
+
+            Logger.LogInformation("var response = await HttpClient.GetAsync(\"api/V1/Error\");");
+            var badModelStateRequestModel = new BadModelStateRequestModel();// { Name = "SomeName" };
+
+            //var formData = new List<KeyValuePair<string, string>>();
+            //using (var httpContent = new FormUrlEncodedContent(formData))
+            using (var response = await HttpClient.PostAsync("api/V1/Error", new StringContent(badModelStateRequestModel.Serialize(), System.Text.Encoding.UTF8, "application/json")))
+            {
+                HttpStatusCode = response.StatusCode;
+                Logger.LogInformation($"response.IsSuccessStatusCode:{response.IsSuccessStatusCode}");
+                Logger.LogInformation("await response.Content.ReadAsStringAsync();");
+                Json = await response.Content.ReadAsStringAsync();
+                Logger.LogInformation("ApiResultModel = Json.Deserialize<BadModelStateRequestModel>();");
+                ApiResultModel = Json.Deserialize<ApiResultModel<BadModelStateRequestModel>>();
+                Logger.LogInformation($"ApiResultModel is {(ApiResultModel is null ? "NULL" : "DATA")}");
+            }
+
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, $"*** ErrorTests.razor encountered exception:  {ex.Message}");
+            var message = ex.Message;
+        }
+    }
+
+}

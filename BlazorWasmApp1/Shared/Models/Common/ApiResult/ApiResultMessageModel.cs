@@ -1,6 +1,4 @@
 ﻿
-using System;
-
 using Newtonsoft.Json;
 
 namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
@@ -8,7 +6,6 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
     /// <summary>
     /// Represents a message about the current result.
     /// </summary>
-    [Serializable]
     public class ApiResultMessageModel : IApiResultMessageModel
     {
         /// <summary>
@@ -33,6 +30,7 @@ namespace BlazorWasmApp1.Shared.Models.Common.ApiResult
         /// Source that caused this message.
         /// </summary>
         [JsonProperty("source")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2235:Mark all non-serializable fields", Justification = "<Pending>")]
         public string Source { get; set; }
 
         ///// <summary>

@@ -81,11 +81,15 @@ else
             //Logger.LogInformation("var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>(\"WeatherForecast\");");
             //var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>("WeatherForecast");
 
+            var requestAccessTokenResult = await AccessTokenProvider.RequestAccessToken();
+            requestAccessTokenResult.TryGetToken(out AccessToken accessToken);
+            HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken.Value);
 
             Logger.LogInformation("var response = await HttpClient.GetAsync(\"WeatherForecast\");");
             using (var response = await HttpClient.GetAsync("api/V1/WeatherForecast"))
             {
                 Logger.LogInformation($"response.IsSuccessStatusCode:{response.IsSuccessStatusCode}");
+                Logger.LogInformation($"response.StatusCode:{response.StatusCode}");
                 if (response.IsSuccessStatusCode)
                 {
                     Logger.LogInformation("await response.Content.ReadAsStringAsync();");

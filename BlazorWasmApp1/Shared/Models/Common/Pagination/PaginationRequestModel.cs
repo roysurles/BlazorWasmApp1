@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 using Newtonsoft.Json;
 
@@ -8,7 +7,6 @@ namespace BlazorWasmApp1.Shared.Models.Common.Pagination
     /// <summary>
     /// Represents the parameters required for pagination.
     /// </summary>
-    [Serializable]
     public class PaginationRequestModel : IPaginationRequestModel
     {
         /// <summary>

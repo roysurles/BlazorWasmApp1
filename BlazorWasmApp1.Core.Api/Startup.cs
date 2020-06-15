@@ -1,5 +1,6 @@
 
 using BlazorWasmApp1.Shared.Extensions;
+using BlazorWasmApp1.Shared.Filters;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +27,9 @@ namespace BlazorWasmApp1.Core.Api
             // https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1
             services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("https://localhost:44350");
+                builder.WithOrigins("https://localhost:44350")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             }
             ));
 
@@ -52,6 +55,10 @@ namespace BlazorWasmApp1.Core.Api
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
             });
+
+            services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+            services.AddMvcCore(config => config.Filters.Add(typeof(GlobalModelStateValidationFilter)))
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddControllers();
         }

@@ -16,10 +16,11 @@ using Microsoft.Extensions.Logging;
 namespace BlazorWasmApp1.Core.Api.Controllers
 {
     [Authorize]
+    //[Authorize(Roles = "SomeRoleName")]  // Forbidden instead of Unauthorized
     //[AllowAnonymous]
     [ApiVersion("1")]
     [ControllerName("WeatherForecast")]
-    [Route("api/v{version:apiVersion}/WeatherForecast")]  // have to add attribuite route otherwise it picks up as WeatherForecastV1... there doesnt appear to be a template for ControllerName
+    [Route("api/v{version:apiVersion}/WeatherForecast")]  // have to add attribute route otherwise it picks up as WeatherForecastV1... there doesnt appear to be a template for ControllerName
     public class WeatherForecastV1Controller : BaseApiController
     {
         private static readonly string[] Summaries = new[]
