@@ -14,24 +14,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-
 namespace BlazorWasmApp1.Core.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
-    [ApiController]
-    [Route("[controller]")]
-    //public class WeatherForecastController : ControllerBase
-    public class WeatherForecastController : BaseApiController
+    //[AllowAnonymous]
+    [ApiVersion("1")]
+    [ControllerName("WeatherForecast")]
+    [Route("api/v{version:apiVersion}/WeatherForecast")]  // have to add attribuite route otherwise it picks up as WeatherForecastV1... there doesnt appear to be a template for ControllerName
+    public class WeatherForecastV1Controller : BaseApiController
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<WeatherForecastV1Controller> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastV1Controller(ILogger<WeatherForecastV1Controller> logger)
         {
             _logger = logger;
         }

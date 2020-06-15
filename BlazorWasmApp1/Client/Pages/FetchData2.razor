@@ -83,7 +83,7 @@ else
 
 
             Logger.LogInformation("var response = await HttpClient.GetAsync(\"WeatherForecast\");");
-            using (var response = await HttpClient.GetAsync("WeatherForecast"))
+            using (var response = await HttpClient.GetAsync("api/V1/WeatherForecast"))
             {
                 Logger.LogInformation($"response.IsSuccessStatusCode:{response.IsSuccessStatusCode}");
                 if (response.IsSuccessStatusCode)

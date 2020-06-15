@@ -4,6 +4,7 @@ using BlazorWasmApp1.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,7 +42,16 @@ namespace BlazorWasmApp1.Core.Api
                    //options.ClaimsIssuer = "BlazorWasmApp1.Client";
                });
 
+
             services.AddServicesEx(Configuration);
+
+            // https://dotnetcoretutorials.com/2017/01/17/api-versioning-asp-net-core/
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
 
             services.AddControllers();
         }
@@ -61,6 +71,7 @@ namespace BlazorWasmApp1.Core.Api
             app.UseRouting();
 
             app.UseCors();
+            app.UseApiVersioning();
 
             app.UseAuthentication();
             app.UseAuthorization();
