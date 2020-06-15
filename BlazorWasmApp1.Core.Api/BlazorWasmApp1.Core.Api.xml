@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BlazorWasmApp1.Core.Api</name>
+    </assembly>
+    <members>
+        <member name="M:BlazorWasmApp1.Core.Api.Controllers.ErrorV1Controller.ThrowException">
+             <summary>
+             Example of global exception handler for webapi.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /throw
+            
+             </remarks>
+             <returns>nothing, throws UnauthorizedAccessException exception</returns>
+             <response code="500">If the item is null</response>
+        </member>
+        <member name="T:BlazorWasmApp1.Core.Api.RemoveVersionFromParameter">
+            <summary>
+            RemoveVersionFromParameter
+            </summary>
+        </member>
+        <member name="M:BlazorWasmApp1.Core.Api.RemoveVersionFromParameter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            Apply
+            </summary>
+            <param name="operation">OpenApiOperation</param>
+            <param name="context">OperationFilterContext</param>
+        </member>
+        <member name="T:BlazorWasmApp1.Core.Api.ReplaceVersionWithExactValueInPath">
+            <summary>
+            ReplaceVersionWithExactValueInPath
+            </summary>
+        </member>
+        <member name="M:BlazorWasmApp1.Core.Api.ReplaceVersionWithExactValueInPath.Apply(Microsoft.OpenApi.Models.OpenApiDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)">
+            <summary>
+            Apply
+            </summary>
+            <param name="swaggerDoc">OpenApiDocument</param>
+            <param name="context">DocumentFilterContext</param>
+        </member>
+        <member name="T:BlazorWasmApp1.Core.Api.OrderByFilter">
+            <summary>
+            OrderByFilter
+            </summary>
+        </member>
+        <member name="M:BlazorWasmApp1.Core.Api.OrderByFilter.Apply(Microsoft.OpenApi.Models.OpenApiDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)">
+            <summary>
+            Apply
+            </summary>
+            <param name="swaggerDoc">OpenApiDocument</param>
+            <param name="context">DocumentFilterContext</param>
+        </member>
+    </members>
+</doc>
