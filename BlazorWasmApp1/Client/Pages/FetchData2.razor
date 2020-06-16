@@ -6,9 +6,11 @@
 @*@attribute [Authorize(Roles = "Admin")]*@
 @attribute [Authorize]
 @inject IHttpClientFactory HttpClientFactory
+@inject BlazorWasmApp1CoreApiClient BlazorWasmApp1CoreApiClient
 @inject IAccessTokenProvider AccessTokenProvider
 @inject IJSRuntime JSRuntime
 @inject ILogger<FetchData2> Logger
+
 
 
 <h1>Weather forecast 2 - https://localhost:44390/weatherforecast</h1>
@@ -47,14 +49,17 @@ else
     <p>@HttpClient.BaseAddress</p>
 
 
-    <br />
-    <h4>Messages</h4>
-    <ul>
-        @foreach (var message in ApiResultModel.Messages)
-        {
-            <li><span><bold>@message.MessageType</bold>: @message?.Message</span></li>
-        }
-    </ul>
+    @if (ApiResultModel != null)
+    {
+        <br />
+        <h4>Messages</h4>
+        <ul>
+            @foreach (var message in ApiResultModel.Messages)
+            {
+                <li><span><bold>@message.MessageType</bold>: @message?.Message</span></li>
+            }
+        </ul>
+    }
 
     <h4>Json</h4>
     <span>@Json</span>
@@ -74,16 +79,30 @@ else
     {
         try
         {
+
+            ApiResultModel = await BlazorWasmApp1CoreApiClient.HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
+            Logger.LogInformation($"ApiResultModel is {(ApiResultModel is null ? "NULL" : "DATA")}");
+            forecasts = ApiResultModel.Data;
+            Logger.LogInformation($"forecasts.Count: {forecasts.Count()}");
+            return;
+
+
             Logger.LogInformation("HttpClientFactory.CreateClient(\"BlazorWasmApp1.CoreAPI\")");
             HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.CoreAPI");
+
+            //ApiResultModel = await HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
+            //forecasts = ApiResultModel.Data;
+            //return;
+
             //HttpClient.BaseAddress = new Uri("https://localhost:44390/");
             //forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
             //Logger.LogInformation("var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>(\"WeatherForecast\");");
             //var ApiResultModel = await HttpClient.GetFromJsonAsync<ApiResultModel<IEnumerable<WeatherForecast>>>("WeatherForecast");
 
-            var requestAccessTokenResult = await AccessTokenProvider.RequestAccessToken();
-            requestAccessTokenResult.TryGetToken(out AccessToken accessToken);
-            HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken.Value);
+            //var requestAccessTokenResult = await AccessTokenProvider.RequestAccessToken();
+            //requestAccessTokenResult.TryGetToken(out AccessToken accessToken);
+            //HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken.Value);
+
 
             Logger.LogInformation("var response = await HttpClient.GetAsync(\"WeatherForecast\");");
             using (var response = await HttpClient.GetAsync("api/V1/WeatherForecast"))
