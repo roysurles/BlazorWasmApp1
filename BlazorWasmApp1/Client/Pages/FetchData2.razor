@@ -80,19 +80,19 @@ else
         try
         {
 
-            ApiResultModel = await BlazorWasmApp1CoreApiClient.HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
-            Logger.LogInformation($"ApiResultModel is {(ApiResultModel is null ? "NULL" : "DATA")}");
-            forecasts = ApiResultModel.Data;
-            Logger.LogInformation($"forecasts.Count: {forecasts.Count()}");
-            return;
+            //ApiResultModel = await BlazorWasmApp1CoreApiClient.HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
+            //Logger.LogInformation($"ApiResultModel is {(ApiResultModel is null ? "NULL" : "DATA")}");
+            //forecasts = ApiResultModel.Data;
+            //Logger.LogInformation($"forecasts.Count: {forecasts.Count()}");
+            //return;
 
 
             Logger.LogInformation("HttpClientFactory.CreateClient(\"BlazorWasmApp1.CoreAPI\")");
             HttpClient = HttpClientFactory.CreateClient("BlazorWasmApp1.CoreAPI");
 
-            //ApiResultModel = await HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
-            //forecasts = ApiResultModel.Data;
-            //return;
+            ApiResultModel = await HttpClient.GetAsyncEx<IEnumerable<WeatherForecast>>("api/V1/WeatherForecast", Logger);
+            forecasts = ApiResultModel.Data;
+            return;
 
             //HttpClient.BaseAddress = new Uri("https://localhost:44390/");
             //forecasts = await HttpClient.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
