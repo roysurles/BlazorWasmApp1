@@ -76,6 +76,9 @@ namespace BlazorWasmApp1.Client
 
 
         // could strong type it further with
+        // https://elanderson.net/2018/03/refit-basics/
+        // https://www.hanselman.com/blog/UsingASPNETCore21sHttpClientFactoryWithRefitsRESTLibrary.aspx
+        // https://github.com/reactiveui/refit
         // https://code-maze.com/different-ways-consume-restful-api-csharp/
         //public async Task<WeatherForecast[]> GetForecastAsync()
         //{
