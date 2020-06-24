@@ -46,6 +46,9 @@ namespace BlazorWasmApp1.Client
             builder.Services.AddApiAuthorization()
                 .AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
+            // Example of in-memory Session.Id or TraceId
+            builder.Services.AddScoped<SessionSate>();
+
             return builder.Build().RunAsync();
         }
     }
