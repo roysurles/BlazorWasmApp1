@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmApp1.Shared", "Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmApp1.Core.Api", "BlazorWasmApp1.Core.Api\BlazorWasmApp1.Core.Api.csproj", "{4D1FD392-60F8-4498-9277-6CD959DE5AE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasmApp1.UnitTests", "BlazorWasmApp1.UnitTests\BlazorWasmApp1.UnitTests.csproj", "{E6EA6887-8679-48FF-8393-C5EA0EF7E632}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4D1FD392-60F8-4498-9277-6CD959DE5AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D1FD392-60F8-4498-9277-6CD959DE5AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D1FD392-60F8-4498-9277-6CD959DE5AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6EA6887-8679-48FF-8393-C5EA0EF7E632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6EA6887-8679-48FF-8393-C5EA0EF7E632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6EA6887-8679-48FF-8393-C5EA0EF7E632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6EA6887-8679-48FF-8393-C5EA0EF7E632}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

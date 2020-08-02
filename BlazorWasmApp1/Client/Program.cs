@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using BlazorWasmApp1.Client.Features.ParentChild;
 using BlazorWasmApp1.Client.Shared;
 
 using Microsoft.AspNetCore.Components;
@@ -33,6 +34,9 @@ namespace BlazorWasmApp1.Client
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<HttpContextAccessor>();
+
+            builder.Services.AddTransient<IParentChildService, ParentChildService>();
+            builder.Services.AddTransient<IParentChildViewModel, ParentChildViewModel>();
 
             // example of policy:  https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-3.1
             builder.Services.AddAuthorizationCore(options =>
