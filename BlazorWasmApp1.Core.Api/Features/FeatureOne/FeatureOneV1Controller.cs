@@ -11,7 +11,7 @@ namespace BlazorWasmApp1.Core.Api.Features.FeatureOne
     [ApiVersion("1")]
     [ControllerName("FeatureOne")]
     [Route("api/v{version:apiVersion}/FeaureOne")]
-    public class FeatureOneController : BaseApiController
+    public class FeatureOneV1Controller : BaseApiController
     {
         [HttpGet]
         [Route("")]
