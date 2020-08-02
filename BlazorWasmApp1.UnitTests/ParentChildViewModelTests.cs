@@ -4,21 +4,28 @@ using BlazorWasmApp1.Client.Features.ParentChild;
 
 using FluentAssertions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Moq;
 
 using Xunit;
 
 namespace BlazorWasmApp1.UnitTests
 {
-    public class ParentChildViewModelTests
+    public class ParentChildViewModelTests : IClassFixture<ServiceCollectionFixture>
     {
+        private readonly ServiceProvider _serviceProvider;
+
+        public ParentChildViewModelTests(ServiceCollectionFixture serviceCollectionFixture) =>
+            _serviceProvider = serviceCollectionFixture.ServiceProvider;
+
         [Fact]
         public void GetNumbers_Should_Return_1thru5()
         {
             // Arrange
             var expectedResult = Enumerable.Range(1, 5);
-            var svc = new ParentChildService();
-            var vm = new ParentChildViewModel(svc);
+            //var svc = _serviceProvider.GetService<IParentChildService>();   // new ParentChildService();
+            var vm = _serviceProvider.GetService<IParentChildViewModel>();    // new ParentChildViewModel(svc);
 
             // Act
             var result = vm.GetNumbers();
