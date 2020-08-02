@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 
+using BlazorWasmApp1.Core.Api.Features.FeatureOne;
+
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
@@ -21,6 +24,7 @@ namespace BlazorWasmApp1.Core.Api.UnitTests
             // Make sure WebApi project starts first...
 
             // Arrange
+            var svc = _factory.Services.GetService<IFeatureOneService>();
             string url = "https://localhost:44390//api/v1/FeaureOne";
             var client = _factory.CreateClient();
 

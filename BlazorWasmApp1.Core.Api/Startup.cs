@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using BlazorWasmApp1.Core.Api.Features.FeatureOne;
 using BlazorWasmApp1.Shared.Extensions;
 using BlazorWasmApp1.Shared.Filters;
 
@@ -153,6 +154,8 @@ namespace BlazorWasmApp1.Core.Api
 
                 //c.DescribeAllEnumsAsStrings();
             });
+
+            services.AddTransient<IFeatureOneService, FeatureOneService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
